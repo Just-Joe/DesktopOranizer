@@ -32,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
 
 
@@ -64,7 +65,7 @@ public class OrgPanel extends javax.swing.JFrame {
         g2.dispose();
 
         return resizedImg;
-}
+    }
     
     private void initFileDrop(){
         IconPanel.setDropTarget(new DropTarget(){
@@ -87,12 +88,18 @@ public class OrgPanel extends javax.swing.JFrame {
                         newIcon.addMouseListener(new MouseAdapter(){
                             public void mouseClicked(MouseEvent e)  
                             {   
-                                String path =e.getComponent().getName();
-                                try{
-                                    Desktop.getDesktop().open(new File(path));
+                                if(SwingUtilities.isLeftMouseButton(e)){
+                                    String path =e.getComponent().getName();
+                                    try{
+                                        Desktop.getDesktop().open(new File(path));
+                                    }
+                                    catch(IOException io){
+
+                                    }
                                 }
-                                catch(IOException io){
-                                    
+                                else{
+                                    RightClickMenu menu = new RightClickMenu();
+                                    menu.show(e.getComponent(), e.getX(), e.getY());
                                 }
                             }  
                         }); 
@@ -100,6 +107,8 @@ public class OrgPanel extends javax.swing.JFrame {
                         IconPanel.add(newIcon);
                         IconPanel.repaint();
                         IconPanel.validate();
+                        ArrangeGrid();
+                        repaint();
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -252,7 +261,10 @@ public class OrgPanel extends javax.swing.JFrame {
                 
         WestResize.setLocation(0,3);
         WestResize.setSize(3,Scroll.getHeight());
-        
+        ArrangeGrid();
+    }//GEN-LAST:event_formComponentResized
+
+    public void ArrangeGrid(){
         GridLayout IconGrid= (GridLayout)IconPanel.getLayout();
         //Set to verticle
         if(IconPanel.getWidth()>IconPanel.getHeight()){
@@ -273,9 +285,8 @@ public class OrgPanel extends javax.swing.JFrame {
             System.out.println("Collums : " + cols + " Rows: " + rows + " for "+ IconCount + " icons.");
         }
         
-    }//GEN-LAST:event_formComponentResized
-
-
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -321,10 +332,15 @@ public class OrgPanel extends javax.swing.JFrame {
 
 class RightClickMenu extends JPopupMenu {
     JMenuItem ExitItem;
+    JMenuItem NewHolder;
     public RightClickMenu(){
         ExitItem = new JMenuItem("Exit");
+        NewHolder = new JMenuItem("New");
+        
         ExitItem.addActionListener(new ExitActionListener());
+        NewHolder.addActionListener(new NewMenuActionListener());
         add(ExitItem);
+        add(NewHolder);
     }
 }
 
@@ -349,5 +365,12 @@ class ExitActionListener implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     System.out.println("About to exit!");
     System.exit(0);
+  }
+}
+class NewMenuActionListener implements ActionListener {
+  public void actionPerformed(ActionEvent e) {
+    System.out.println("Creating New");
+    OrgPanel OG = new OrgPanel();
+    OG.setVisible(true);
   }
 }
