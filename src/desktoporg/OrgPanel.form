@@ -50,13 +50,8 @@
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="EastResize" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="Scroll" min="-2" pref="334" max="-2" attributes="0"/>
-                          <Component id="WestResize" min="-2" pref="334" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="Scroll" min="-2" pref="334" max="-2" attributes="0"/>
+                  <Component id="WestResize" min="-2" pref="334" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="SouthResize" pref="3" max="32767" attributes="0"/>
@@ -79,11 +74,8 @@
             <EventHandler event="mouseDragged" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="IconPanelMouseDragged"/>
           </Events>
 
-          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-            <Property name="columns" type="int" value="2"/>
-            <Property name="horizontalGap" type="int" value="1"/>
-            <Property name="rows" type="int" value="6"/>
-            <Property name="verticalGap" type="int" value="1"/>
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+            <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
         </Container>
       </SubComponents>

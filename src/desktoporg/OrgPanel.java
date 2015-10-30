@@ -26,6 +26,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -43,7 +44,10 @@ import javax.swing.filechooser.FileSystemView;
 public class OrgPanel extends javax.swing.JFrame {
 
     int IconSize= 50;
+    int IconSpacing = 5;
     int IconCount = 0;
+    List<JLabel> IconList = new ArrayList<JLabel>();
+           
     
     /**
      * Creates new form OrgPanel
@@ -104,12 +108,15 @@ public class OrgPanel extends javax.swing.JFrame {
                             }  
                         }); 
                         newIcon.setSize(IconSize, IconSize);
-                        IconPanel.add(newIcon);
-                        IconPanel.repaint();
-                        IconPanel.validate();
-                        ArrangeGrid();
-                        repaint();
+                        IconList.add(newIcon);
+                        //IconPanel.add(newIcon);
+                        //IconPanel.repaint();
+                        //IconPanel.validate();
+                        //ArrangeGrid();
+                        //repaint();
                     }
+                    ArrangeGrid();
+                    repaint();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -142,7 +149,7 @@ public class OrgPanel extends javax.swing.JFrame {
                 IconPanelMouseDragged(evt);
             }
         });
-        IconPanel.setLayout(new java.awt.GridLayout(6, 2, 1, 1));
+        IconPanel.setLayout(null);
         Scroll.setViewportView(IconPanel);
 
         NorthResize.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -192,11 +199,8 @@ public class OrgPanel extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(EastResize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(WestResize, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, 0)))
+                    .addComponent(Scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(WestResize, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(SouthResize, javax.swing.GroupLayout.PREFERRED_SIZE, 3, Short.MAX_VALUE))
         );
@@ -242,13 +246,15 @@ public class OrgPanel extends javax.swing.JFrame {
         //North
         Scroll.setLocation(3,3);
         Scroll.setSize(this.getWidth()-6,this.getHeight()-6);
-        
+       
+        /*
         if(IconPanel.getHeight()<Scroll.getHeight()){
             IconPanel.setSize(IconPanel.getWidth(), Scroll.getHeight());
         }
         if(IconPanel.getWidth()<Scroll.getWidth()){
             IconPanel.setSize(Scroll.getWidth(), IconPanel.getHeight());
         }
+        */
         
         NorthResize.setLocation(3, 0);
         NorthResize.setSize(Scroll.getWidth(), 3);
@@ -265,23 +271,46 @@ public class OrgPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_formComponentResized
 
     public void ArrangeGrid(){
+        IconPanel.removeAll(); //Remove past icons when re-arranging
+        
         GridLayout IconGrid= (GridLayout)IconPanel.getLayout();
-        //Set to verticle
-        if(IconPanel.getWidth()>IconPanel.getHeight()){
-            int cols = IconPanel.getWidth()/IconSize;
-            int rows = (IconCount/IconGrid.getColumns())+1;
-            IconGrid.setColumns(cols);
-            IconGrid.setRows(rows);
+         
+        //Horizontal
+        if(this.getWidth()>this.getHeight()){
+            System.out.println("Horizontal Aspect");
+            int cols = IconPanel.getWidth()/(IconSize+IconSpacing);
+            int rows = (IconCount/cols)+1;
+            int i=0;
             
+            IconPanel.setSize(cols*(IconSize+IconSpacing), rows*(IconSize+IconSpacing));
+            
+            for(int y=0; y<rows; y++){
+                for(int x=0; x<cols; x++){
+                    JLabel cur = IconList.get(i);
+                    IconPanel.add(cur);
+                    cur.setBounds(x*(IconSize+IconSpacing), (IconSize+IconSpacing), IconSize, IconSize);
+                    i++;
+                }
+            }
             System.out.println("Collums : " + cols + " Rows: " + rows + " for "+ IconCount + " icons.");
         }
         //Set to Horizontal
         else{
-            int rows = IconPanel.getHeight()/IconSize;
-            int cols = (IconCount/IconGrid.getRows())+1;
-            IconGrid.setRows(rows);
-            IconGrid.setColumns(cols);
+            System.out.println("Verticle Aspect");
+            int rows = IconPanel.getHeight()/(IconSize+IconSpacing);
+            int cols = (IconCount/rows)+1;
+            int i=0;
             
+            IconPanel.setSize(cols*(IconSize+IconSpacing), rows*(IconSize+IconSpacing));
+            
+            for(int y=0; y<rows; y++){
+                for(int x=0; x<cols; x++){
+                    JLabel cur = IconList.get(i);
+                    IconPanel.add(cur);
+                    cur.setBounds(x*(IconSize+IconSpacing), (IconSize+IconSpacing), IconSize, IconSize);
+                    i++;
+                }
+            }
             System.out.println("Collums : " + cols + " Rows: " + rows + " for "+ IconCount + " icons.");
         }
         
